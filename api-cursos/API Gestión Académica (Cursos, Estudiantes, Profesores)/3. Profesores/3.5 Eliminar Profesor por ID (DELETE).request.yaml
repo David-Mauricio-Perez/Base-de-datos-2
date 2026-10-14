@@ -1,0 +1,10 @@
+$kind: http-request
+url: "{{baseUrl}}/profesores/{{profesorId}}"
+method: DELETE
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status code es 200 (OK)', function () { pm.response.to.have.status(200); });
+      pm.test('Mensaje de eliminación recibido', function () { const res = pm.response.json(); pm.expect(res).to.have.property('mensaje'); });
+    language: text/javascript
+order: 5000

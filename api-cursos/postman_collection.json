@@ -1,0 +1,491 @@
+{
+  "info": {
+    "_postman_id": "b3e94471-a477-4c07-9b21-654877119e83",
+    "name": "API Gestión Académica (Cursos, Estudiantes, Profesores)",
+    "description": "Colección completa con pruebas automatizadas para Express, Mongoose y MongoDB.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "cursoId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "estudianteId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "profesorId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "0. Info API",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code es 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Retorna info de la API', function () { const data = pm.response.json(); pm.expect(data).to.have.property('nombre'); });"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/",
+          "host": ["{{baseUrl}}"],
+          "path": [""]
+        }
+      }
+    },
+    {
+      "name": "1. Cursos",
+      "item": [
+        {
+          "name": "1.1 Crear Curso (POST)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 201 (Creado)', function () { pm.response.to.have.status(201); });",
+                  "const res = pm.response.json();",
+                  "pm.test('Devuelve el ID del curso generado', function () { pm.expect(res).to.have.property('_id'); });",
+                  "if (res._id) { pm.collectionVariables.set('cursoId', res._id); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigo\": \"BD-{{$timestamp}}\",\n  \"nombre\": \"Bases de Datos 2\",\n  \"creditos\": 3,\n  \"profesor\": \"Jhon Mendez\",\n  \"estado\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cursos",
+              "host": ["{{baseUrl}}"],
+              "path": ["cursos"]
+            }
+          }
+        },
+        {
+          "name": "1.2 Listar Cursos (GET)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200 (OK)', function () { pm.response.to.have.status(200); });",
+                  "pm.test('La respuesta es un arreglo de cursos', function () { pm.expect(pm.response.json()).to.be.an('array'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cursos",
+              "host": ["{{baseUrl}}"],
+              "path": ["cursos"]
+            }
+          }
+        },
+        {
+          "name": "1.3 Consultar Curso por ID (GET)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200 (OK)', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Coincide el ID consultado', function () { const res = pm.response.json(); pm.expect(res._id).to.eql(pm.collectionVariables.get('cursoId')); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cursos/{{cursoId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["cursos", "{{cursoId}}"]
+            }
+          }
+        },
+        {
+          "name": "1.4 Actualizar Curso por ID (PUT)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200 (OK)', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Verifica campos actualizados', function () { const res = pm.response.json(); pm.expect(res.creditos).to.eql(4); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"creditos\": 4,\n  \"nombre\": \"Bases de Datos Avanzadas\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cursos/{{cursoId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["cursos", "{{cursoId}}"]
+            }
+          }
+        },
+        {
+          "name": "1.5 Eliminar Curso por ID (DELETE)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200 (OK)', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Mensaje de eliminación recibido', function () { const res = pm.response.json(); pm.expect(res).to.have.property('mensaje'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cursos/{{cursoId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["cursos", "{{cursoId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Estudiantes",
+      "item": [
+        {
+          "name": "2.1 Crear Estudiante (POST)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 201 (Creado)', function () { pm.response.to.have.status(201); });",
+                  "const res = pm.response.json();",
+                  "pm.test('Devuelve el ID del estudiante generado', function () { pm.expect(res).to.have.property('_id'); });",
+                  "if (res._id) { pm.collectionVariables.set('estudianteId', res._id); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Laura Morales\",\n  \"edad\": 21,\n  \"email\": \"laura_{{$timestamp}}@mail.com\",\n  \"activo\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/estudiantes",
+              "host": ["{{baseUrl}}"],
+              "path": ["estudiantes"]
+            }
+          }
+        },
+        {
+          "name": "2.2 Listar Estudiantes (GET)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200 (OK)', function () { pm.response.to.have.status(200); });",
+                  "pm.test('La respuesta es un arreglo', function () { pm.expect(pm.response.json()).to.be.an('array'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/estudiantes",
+              "host": ["{{baseUrl}}"],
+              "path": ["estudiantes"]
+            }
+          }
+        },
+        {
+          "name": "2.3 Consultar Estudiante por ID (GET)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200 (OK)', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Coincide el ID consultado', function () { const res = pm.response.json(); pm.expect(res._id).to.eql(pm.collectionVariables.get('estudianteId')); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/estudiantes/{{estudianteId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["estudiantes", "{{estudianteId}}"]
+            }
+          }
+        },
+        {
+          "name": "2.4 Actualizar Estudiante por ID (PUT)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200 (OK)', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Verifica actualización de edad', function () { const res = pm.response.json(); pm.expect(res.edad).to.eql(22); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"edad\": 22\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/estudiantes/{{estudianteId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["estudiantes", "{{estudianteId}}"]
+            }
+          }
+        },
+        {
+          "name": "2.5 Eliminar Estudiante por ID (DELETE)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200 (OK)', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Mensaje de eliminación correcto', function () { const res = pm.response.json(); pm.expect(res).to.have.property('mensaje'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/estudiantes/{{estudianteId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["estudiantes", "{{estudianteId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Profesores",
+      "item": [
+        {
+          "name": "3.1 Crear Profesor (POST)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 201 (Creado)', function () { pm.response.to.have.status(201); });",
+                  "const res = pm.response.json();",
+                  "pm.test('Devuelve el ID del profesor generado', function () { pm.expect(res).to.have.property('_id'); });",
+                  "if (res._id) { pm.collectionVariables.set('profesorId', res._id); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Jhon Mendez\",\n  \"email\": \"profesor_{{$timestamp}}@universidad.edu.co\",\n  \"departamento\": \"Ingeniería de Sistemas\",\n  \"activo\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/profesores",
+              "host": ["{{baseUrl}}"],
+              "path": ["profesores"]
+            }
+          }
+        },
+        {
+          "name": "3.2 Listar Profesores (GET)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200 (OK)', function () { pm.response.to.have.status(200); });",
+                  "pm.test('La respuesta es un arreglo', function () { pm.expect(pm.response.json()).to.be.an('array'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/profesores",
+              "host": ["{{baseUrl}}"],
+              "path": ["profesores"]
+            }
+          }
+        },
+        {
+          "name": "3.3 Consultar Profesor por ID (GET)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200 (OK)', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Coincide el ID consultado', function () { const res = pm.response.json(); pm.expect(res._id).to.eql(pm.collectionVariables.get('profesorId')); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/profesores/{{profesorId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["profesores", "{{profesorId}}"]
+            }
+          }
+        },
+        {
+          "name": "3.4 Actualizar Profesor por ID (PUT)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200 (OK)', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Verifica actualización de departamento', function () { const res = pm.response.json(); pm.expect(res.departamento).to.include('Inteligencia Artificial'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"departamento\": \"Ciencias de la Computación e Inteligencia Artificial\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/profesores/{{profesorId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["profesores", "{{profesorId}}"]
+            }
+          }
+        },
+        {
+          "name": "3.5 Eliminar Profesor por ID (DELETE)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200 (OK)', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Mensaje de eliminación recibido', function () { const res = pm.response.json(); pm.expect(res).to.have.property('mensaje'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/profesores/{{profesorId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["profesores", "{{profesorId}}"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+$kind: http-request
+url: "{{baseUrl}}/profesores"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "nombre": "Jhon Mendez",
+      "email": "profesor_{{$timestamp}}@universidad.edu.co",
+      "departamento": "Ingeniería de Sistemas",
+      "activo": true
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status code es 201 (Creado)', function () { pm.response.to.have.status(201); });
+      const res = pm.response.json();
+      pm.test('Devuelve el ID del profesor generado', function () { pm.expect(res).to.have.property('_id'); });
+      if (res._id) { pm.collectionVariables.set('profesorId', res._id); }
+    language: text/javascript
+order: 1000

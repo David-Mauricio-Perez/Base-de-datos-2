@@ -1,0 +1,7 @@
+$kind: collection
+description: Colección completa con pruebas automatizadas para Express, Mongoose y MongoDB.
+variables:
+  baseUrl: http://localhost:3000
+  cursoId: ""
+  estudianteId: ""
+  profesorId: ""

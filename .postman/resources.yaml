@@ -1,0 +1,13 @@
+# Use this workspace to collaborate
+workspace:
+  id: 8d491770-7c9a-462e-82ab-828d03c9ba2f
+
+localResources:
+  collections:
+    - ../api-cursos/API Gestión Académica (Cursos, Estudiantes, Profesores)
+
+# Each entry here maps a local resource to one or more corresponding objects in Postman Cloud
+
+cloudResources:
+  collections:
+    ../api-cursos/API Gestión Académica (Cursos, Estudiantes, Profesores): b3e94471-a477-4c07-9b21-654877119e83

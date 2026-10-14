@@ -1,0 +1,23 @@
+{
+  "name": "api-cursos",
+  "version": "1.0.0",
+  "description": "API REST para administrar Cursos, Estudiantes y Profesores con Express y Mongoose",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test:postman": "newman run postman_collection.json"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongoose": "^8.9.5"
+  },
+  "devDependencies": {
+    "newman": "^6.2.2"
+  }
+}

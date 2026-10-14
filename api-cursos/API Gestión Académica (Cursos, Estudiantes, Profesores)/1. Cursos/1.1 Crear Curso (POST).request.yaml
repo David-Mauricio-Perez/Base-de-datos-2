@@ -1,0 +1,24 @@
+$kind: http-request
+url: "{{baseUrl}}/cursos"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "codigo": "BD-{{$timestamp}}",
+      "nombre": "Bases de Datos 2",
+      "creditos": 3,
+      "profesor": "Jhon Mendez",
+      "estado": true
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status code es 201 (Creado)', function () { pm.response.to.have.status(201); });
+      const res = pm.response.json();
+      pm.test('Devuelve el ID del curso generado', function () { pm.expect(res).to.have.property('_id'); });
+      if (res._id) { pm.collectionVariables.set('cursoId', res._id); }
+    language: text/javascript
+order: 1000
